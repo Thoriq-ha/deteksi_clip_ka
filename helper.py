@@ -63,11 +63,12 @@ def _display_detected_frames(conf, model, st_frame, image, is_display_tracking=N
     names = model.names
     # # Plot the detected objects on the video frame
     res_plotted = res[0].plot()
-
+    
+    
     g = geocoder.ip('me')
     for r in res:
         for c in r.boxes.cls:
-            if(names[int(c)] != 'KAClipLengkap'):
+            if(names[int(c)] == 'DClipHilang' or names[int(c)] == 'EClipHilang' or names[int(c)] == 'KAClipHilang' or names[int(c)] == 'TireponHilang'):
                 label = names[int(c)]
                 location = g.latlng
                 img = res_plotted
@@ -187,6 +188,13 @@ def play_webcam(conf, model):
         try:
             vid_cap = cv2.VideoCapture(source_webcam)
             st_frame = st.empty()
+            dict = {
+                'label':[],
+                'location':[],
+                'gambar':[]
+            }
+
+            df = pd.DataFrame(dict)
             while (vid_cap.isOpened()):
                 success, image = vid_cap.read()
                 if success:
@@ -196,6 +204,7 @@ def play_webcam(conf, model):
                                              image,
                                              is_display_tracker,
                                              tracker,
+                                             df
                                              )
                 else:
                     vid_cap.release()
@@ -253,8 +262,8 @@ def play_stored_video(conf, model):
             vid_cap = cv2.VideoCapture(file_path)
             st_frame = st.empty()
             dict = {
-                'Label':[],
-                'Location':[],
+                'label':[],
+                'location':[],
                 'gambar':[]
             }
 

@@ -33,8 +33,7 @@ st.sidebar.header("ML Model Config")
 model_type = st.sidebar.radio(
     "Select Task", ['Detection'])
 
-confidence = float(st.sidebar.slider(
-    "Select Model Confidence", 25, 100, 40)) / 100
+confidence = 40 / 100
 
 # Selecting Detection Or Segmentation
 if model_type == 'Detection':
@@ -82,6 +81,8 @@ if source_radio == settings.IMAGE:
                 default_detected_image_path)
             st.image(default_detected_image_path, caption='Detected Image',
                      use_column_width=True)
+            st.sidebar.button('Detect Objects')
+                # st.sidebar.text('Masukkan file terlebih dahulu')
         else:
             if st.sidebar.button('Detect Objects'):
                 res = model.predict(uploaded_image,
@@ -108,8 +109,8 @@ elif source_radio == settings.WEBCAM:
 elif source_radio == settings.RTSP:
     helper.play_rtsp_stream(confidence, model)
 
-elif source_radio == settings.YOUTUBE:
-    helper.play_youtube_video(confidence, model)
+# elif source_radio == settings.YOUTUBE:
+#     helper.play_youtube_video(confidence, model)
 
 else:
     st.error("Please select a valid source type!")
