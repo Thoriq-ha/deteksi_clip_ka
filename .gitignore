@@ -144,5 +144,5 @@ dmypy.json
 .pyre/
 
 .test
-logger/data_logger/
-logger/image_logger/
+logger/data_logger/*
+logger/image_logger/*
