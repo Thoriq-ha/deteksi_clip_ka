@@ -142,3 +142,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+.test
+logger/data_logger/*
+logger/image_logger/*
