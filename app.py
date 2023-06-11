@@ -17,17 +17,18 @@ os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 # Setting page layout
 st.set_page_config(
-    page_title="Object Detection using YOLOv8",
+    page_title="Rail Fasteners Detector",
     page_icon="🤖",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 # Main page heading
-st.title("Object Detection using YOLOv8")
-
+st.title("Rail Fasteners Detector")
 # Sidebar
-st.sidebar.header("ML Model Config")
+
+st.sidebar.image('images/title.jpg' )
+st.sidebar.title("ML Model Config")
 
 # Model Options
 model_type = st.sidebar.radio(

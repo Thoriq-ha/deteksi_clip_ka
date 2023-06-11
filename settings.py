@@ -35,7 +35,7 @@ VIDEO_DIR = ROOT / 'videos'
 
 # ML Model config
 MODEL_DIR = ROOT / 'weights'
-DETECTION_MODEL = MODEL_DIR / 'deteksi_clip.pt'
+DETECTION_MODEL = MODEL_DIR / 'deteksi_clip_new.pt'
 
 # Webcam
 WEBCAM_PATH = 0

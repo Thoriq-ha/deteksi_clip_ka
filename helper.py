@@ -1,3 +1,4 @@
+import time
 from ultralytics import YOLO
 import streamlit as st
 import cv2
@@ -6,6 +7,7 @@ import geocoder
 from fpdf import FPDF
 import base64
 import pandas as pd
+from location_windows import get_current_location
 import settings
 from datetime import datetime
 
@@ -63,31 +65,39 @@ def _display_detected_frames(conf, model, st_frame, image, is_display_tracking=N
     names = model.names
     # # Plot the detected objects on the video frame
     res_plotted = res[0].plot()
-    
-    
-    g = geocoder.ip('me')
-    for r in res:
-        for c in r.boxes.cls:
-            if(names[int(c)] == 'DClipHilang' or names[int(c)] == 'EClipHilang' or names[int(c)] == 'KAClipHilang' or names[int(c)] == 'TireponHilang'):
-                label = names[int(c)]
-                location = g.latlng
-                img = res_plotted
-                
-                filenameimg = datetime.now().strftime('%Y-%m-%d--%H-%M-%S')
-                cv2.imwrite(f'./logger/image_logger/{filenameimg}.jpg', img)   
-                
-                df.loc[len(df.index)] = [label, location, f'{filenameimg}.jpg'] 
-                
-                st.write(label, location)
-                st.image(img)
-
-    filename = datetime.now().strftime('%Y-%m-%d--%H-%M')
-    df.to_csv(f'./logger/data_logger/{filename}.csv')
     st_frame.image(res_plotted,
                 caption='Detected Video',
                 channels="BGR",
                 use_column_width=True
-                )
+                )    
+    
+    # g = geocoder.ip('me')
+    # wt = 2 # Wait time -- I purposefully make it wait before the shell command
+    time_interval = ["0", "5", "10", "15", "20", "25", "30", "35", "40", "55"]
+    current_second_time = "-"
+    for r in res:
+        for c in r.boxes.cls:
+            current_second_time = datetime.now().strftime('%S')
+            if(current_second_time in time_interval):
+                label = names[int(c)]
+                img = res_plotted
+                filenameimg = datetime.now().strftime('%Y-%m-%d--%H-%M-%S')
+                location = ["-", "-"]   
+                if(names[int(c)] == 'DClipLengkap' or names[int(c)] == 'EClipHilang' or names[int(c)] == 'KAClipHilang' or names[int(c)] == 'TireponHilang'):
+                    location = get_current_location()
+                    location = f"https://maps.google.com/?q={location[0]},{location[1]}"
+                    cv2.imwrite(f'./logger/image_logger/{filenameimg}.jpg', img)   
+                    st.write(label, location)
+                    st.image(img)
+                    
+                df.loc[len(df.index)] = [label, location, f'{filenameimg}.jpg'] 
+
+    try:
+        filename = datetime.now().strftime('%Y-%m-%d--%H-%M')
+        df.to_csv(f'./logger/data_logger/{filename}.csv')
+    except:
+        print()
+
 
 
 def play_youtube_video(conf, model):
